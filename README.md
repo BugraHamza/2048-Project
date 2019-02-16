@@ -1,6 +1,6 @@
-# ConsoleGames
-Console Games written with C
+# C Projects
+Console Applications written with C
 
-Games:
+Projects:
 
 -TicTacToe
