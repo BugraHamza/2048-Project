@@ -1,0 +1,279 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+void Color(int num);
+int main(){
+	int i,j,M[4][4],R[4][4],score=0,oldscore=0,highscore=0,x,y,a,b,k,movement=0,endgame=1,tour;
+	char press;
+	srand(time(NULL));
+	for(i=0;i<4;i++){
+		for(j=0;j<4;j++){
+			M[i][j]=0;
+			R[i][j]=0;
+		}
+	}
+	a=rand()%4;
+	b=rand()%4;
+	M[a][b]=2*(rand()%2+1);
+	do{
+		x=rand()%4;
+		y=rand()%4;
+		}while(M[x][y]!=0);
+		M[x][y]=2*(rand()%2+1);
+		do{
+		printf("2048 Game implemented by Bugra Hamza Gundog	v2.4.4.5\n");
+		printf("Score: %d\n",score);
+		for(i=0;i<4;i++){
+		printf("--------------------\n");
+		for(j=0;j<4;j++){
+			printf("|");
+			if(R[i][j]==0)
+				printf("    ");
+			else{
+			Color(R[i][j]);
+        	printf("%4d",R[i][j]);
+        	printf("\033[0m");
+        }
+	}
+		printf("|\n");
+	}
+        printf("---------------------\n");
+        printf("Previous State\n");
+		for(i=0;i<4;i++){
+		printf("--------------------\n");
+		for(j=0;j<4;j++){
+			printf("|");
+			if(M[i][j]==0)
+				printf("    ");
+			else if((i==x&&j==y)||(i==a&&j==b)){
+				Color(M[i][j]);
+				printf("%3d*",M[i][j]);
+				printf("\033[0m");
+				}
+			else{
+				Color(M[i][j]);
+        		printf("%4d",M[i][j]);
+        		printf("\033[0m");
+		}
+	}
+		printf("|\n");
+	}
+        printf("--------------------\n");
+        printf("Current State\n");
+		press=getchar();
+		a=b=-1;
+		movement=0;
+	//EXIT
+	if(press=='e'||press=='E'){
+		endgame=2;
+	}
+	//UNDO
+	if(press=='r'||press=='R'){
+		for(i=0;i<4;i++){
+			for(j=0;j<4;j++){
+				M[i][j]=R[i][j];
+				score=oldscore;
+			}
+		}
+	}
+	//RESET
+	if(press=='X'||press=='x'){
+		for(i=0;i<4;i++){
+			for(j=0;j<4;j++){
+				M[i][j]=0;
+		}
+	}
+	a=rand()%4;
+	b=rand()%4;
+	M[a][b]=2*(rand()%2+1);
+	do{
+   		x=rand()%4;
+		y=rand()%4;
+		}while(M[x][y]!=0);
+		M[x][y]=2*(rand()%2+1);
+		score=0;
+}
+	//DOWN_ARROW
+	if(press==80){
+		for(j=0;j<4;j++){
+			for(i=2;i>=0;i--){
+				k=i;
+			while(M[k+1][j]==0&&M[k][j]!=0&&k<3){
+					M[k+1][j]+=M[k][j];
+					M[k][j]=0;
+					k++;
+					movement=1;
+			}
+		}
+		for(i=2;i>=0;i--){
+			if(M[i+1][j]==M[i][j]&&M[i][j]!=0){
+				M[i+1][j]+=M[i][j];
+				M[i][j]=0;
+				score+=M[i+1][j];
+				movement=1;
+			}
+		}
+		for(i=2;i>=0;i--){
+				if(M[i+1][j]==0){
+					M[i+1][j]+=M[i][j];
+					M[i][j]=0;
+			}
+		}
+	}
+}
+//UP_ARROW
+	if(press==72){
+		for(j=0;j<4;j++){
+			for(i=1;i<4;i++){
+				k=i;
+			while(M[k-1][j]==0&&M[k][j]!=0&&k<4){
+					M[k-1][j]+=M[k][j];
+					M[k][j]=0;
+					k--;
+					movement=1;
+				}
+		}
+		for(i=1;i<4;i++){
+			if(M[i-1][j]==M[i][j]&&M[i][j]!=0){
+				M[i-1][j]+=M[i][j];
+				M[i][j]=0;
+				movement=1;
+				score+=M[i-1][j];
+			}
+		}
+		for(i=1;i<4;i++){
+			if(M[i-1][j]==0){
+				M[i-1][j]+=M[i][j];
+				M[i][j]=0;
+			}
+		}
+	}
+}
+//LEFT_ARROW
+	if(press==75){
+		for(i=0;i<4;i++){
+			for(j=1;j<4;j++){
+				k=j;
+				while(M[i][k-1]==0&&M[k][j]!=0&&k>0){
+					M[i][k-1]+=M[i][k];
+					M[i][k]=0;
+					k--;
+					movement=1;
+				}
+			}
+			for(j=1;j<4;j++){
+				if(M[i][j-1]==M[i][j]&&M[i][j]!=0){
+					M[i][j-1]+=M[i][j];
+					M[i][j]=0;
+					movement=1;
+					score+=M[i][j-1];
+				}
+			}
+			for(j=1;j<4;j++){
+				if(M[i][j-1]==0){
+					M[i][j-1]+=M[i][j];
+					M[i][j]=0;
+				}
+			}
+		}
+	}
+//RIGHT_ARROW
+	if(press==77){
+		for(i=0;i<4;i++){
+			for(j=2;j>=0;j--){
+				k=j;
+				while(M[i][k+1]==0&&M[k][j]!=0&&k<3){
+					M[i][k+1]+=M[i][k];
+					M[i][k]=0;
+					k++;
+					movement=1;
+				}
+			}
+			for(j=2;j>=0;j--){
+				if(M[i][j+1]==M[i][j]&&M[i][j]!=0){
+					M[i][j+1]+=M[i][j];
+					M[i][j]=0;
+					score+=M[i][j+1];
+					movement=1;
+				}
+			}
+			for(j=2;j>=0;j--){
+				if(M[i][j+1]==0){
+					M[i][j+1]+=M[i][j];
+					M[i][j]=0;
+				}
+			}
+		}
+	}
+	tour=0;
+	for(i=0;i<4;i++){
+		for(j=0;j<3;j++){
+			if(M[i][j]!=M[i][j+1]&&M[j][i]!=M[j+1][i])
+				tour++;
+		}
+		for(j=0;j<4;j++){
+			if(M[i][j]==0)
+				tour--;
+			if(M[i][j]==2048)
+				endgame=0;
+		}
+	}
+		if(movement==1){
+			for(i=0;i<4;i++){
+   				for(j=0;j<4;j++){
+					R[i][j]=M[i][j];
+   					oldscore=score;
+	   	}
+   	}
+}
+	if(tour==12)
+		endgame=0;
+	else
+		system("clear");
+		if(movement==1){
+			for(i=0;i<4;i++){
+   				for(j=0;j<4;j++){
+  					R[i][j]=M[i][j];
+   					oldscore=score;
+	   	}
+   	}
+   	do{
+		x=rand()%4;
+		y=rand()%4;
+		}while(M[x][y]!=0);
+		M[x][y]=2*(rand()%2+1);
+}
+		if(score>highscore)
+			highscore=score;
+   }while(endgame==1);
+   	if(tour==12&&endgame!=2)
+   		printf("Sorry, you lost..");
+   	else if(endgame==2)
+   		printf("See you next time..");
+   	else
+   		printf("Congratulations, you won..");
+   	printf("\n HIGHEST SCORE: %d",highscore);
+ 	return 0;
+}
+void Color(int num){
+	if(num==4)
+		printf("\033[0;31m");
+	if(num==8)
+		printf("\033[1;31m");
+	if(num==16)
+		printf("\033[0;32m");
+	if(num==32)
+		printf("\033[1;32m");
+	if(num==64)
+		printf("\033[0;33m");
+	if(num==128)
+		printf("\033[1;33m");
+	if(num==256)
+		printf("\033[0;34m");
+	if(num==512)
+		printf("\033[1;34m");
+	if(num==1024)
+		printf("\033[0;35m");
+	if(num==2048)
+		printf("\033[1;35m]");
+}
