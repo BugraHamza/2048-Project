@@ -1,8 +1,4 @@
-# C Projects
-Console Applications written in C
+# 2048 Game written in C
 
-Projects:
-
--TicTacToe
-
--2048 Game
+This is a first term school project. 
+This implementation launchs only in Windows.
